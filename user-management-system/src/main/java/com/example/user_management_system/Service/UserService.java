@@ -29,19 +29,19 @@ public class UserService {
     public void updateUser(int id, User user) {
         User existingUser = userRepository.findById(id).orElseThrow();
 
-        if (user.getName() != null) {
+        if (user.getName() != null && !user.getName().isEmpty()) {
             existingUser.setName(user.getName());
         }
 
-        if (user.getPassword() != null) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             existingUser.setPassword(user.getPassword());
         }
 
-        if (user.getEmail() != null) {
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             existingUser.setEmail(user.getEmail());
         }
 
-        if (user.getGender() != null) {
+        if (user.getGender() != null && !user.getGender().isEmpty()) {
             existingUser.setGender(user.getGender());
         }
 
