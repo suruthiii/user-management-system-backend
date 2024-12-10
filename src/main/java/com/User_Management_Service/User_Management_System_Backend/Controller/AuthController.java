@@ -22,11 +22,15 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(
-            description = "Register User",
+            description = "Register a new user to the system",
             summary = "Register User",
             responses = {
-                    @ApiResponse(description = "Successful", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403")
+                    @ApiResponse(
+                            description = "User Successfully Created",
+                            responseCode = "201"),
+                    @ApiResponse(
+                            description = "Forbidden",
+                            responseCode = "403")
             })
     public ResponseEntity<Users> register(@RequestBody UsersDTO reg) {
         return ResponseEntity.ok(authService.register(reg));
@@ -34,11 +38,15 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(
-            description = "User Login",
+            description = "Login to the system as a user",
             summary = "User Login",
             responses = {
-                    @ApiResponse(description = "Successful", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403")
+                    @ApiResponse(
+                            description = "User Logged In Successfully",
+                            responseCode = "200"),
+                    @ApiResponse(
+                            description = "Forbidden",
+                            responseCode = "403")
             })
     public ResponseEntity<ReqRes> login(@RequestBody LoginDTO req) {
         return ResponseEntity.ok(authService.login(req));
@@ -46,11 +54,15 @@ public class AuthController {
 
     @PostMapping("/refresh")
     @Operation(
-            description = "Token Refresh",
+            description = "Refresh token",
             summary = "Token Refresh",
             responses = {
-                    @ApiResponse(description = "Successful", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403")
+                    @ApiResponse(
+                            description = "Token Successfully Refreshed",
+                            responseCode = "200"),
+                    @ApiResponse(
+                            description = "Forbidden",
+                            responseCode = "403")
             })
     public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes req) {
         return ResponseEntity.ok(authService.refreshToken(req));

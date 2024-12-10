@@ -22,15 +22,15 @@ public class UserController {
 
     @GetMapping()
     @Operation(
-            description = "Get All Users for Admin",
-            summary = "Get All Users",
+            description = "Retrieve all users for admin",
+            summary = "Retrieve All Users",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "Users Successfully Retrieved",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<ReqRes> viewUserDetails() {
@@ -39,15 +39,15 @@ public class UserController {
 
     @GetMapping("/{id}")
     @Operation(
-            description = "Get User",
-            summary = "Get Users",
+            description = "Search user by id",
+            summary = "Search Users",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "User Successfully Retrieved",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<ReqRes> searchUser(@PathVariable long id) {
@@ -56,15 +56,15 @@ public class UserController {
 
     @PutMapping("/{id}")
     @Operation(
-            description = "Update User",
+            description = "Update user by id",
             summary = "Update User",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "User Successfully Updated",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<ReqRes> updateUser(@PathVariable long id, @RequestBody Users req) {
@@ -73,15 +73,15 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @Operation(
-            description = "Delete User",
+            description = "Delete user by id",
             summary = "Delete User",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "User Successfully Deleted",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<ReqRes> deleteUser(@PathVariable long id) {
@@ -90,11 +90,15 @@ public class UserController {
 
     @PostMapping()
     @Operation(
-            description = "Register User",
+            description = "Register a new user to the system",
             summary = "Register User",
             responses = {
-                    @ApiResponse(description = "Successful", responseCode = "200"),
-                    @ApiResponse(description = "Unauthorized / Invalid Token", responseCode = "403")
+                    @ApiResponse(
+                            description = "User Successfully Created",
+                            responseCode = "201"),
+                    @ApiResponse(
+                            description = "Forbidden",
+                            responseCode = "403")
             })
     public ResponseEntity<Users> createUser(@RequestBody UsersDTO reg) {
         return ResponseEntity.ok(authService.register(reg));

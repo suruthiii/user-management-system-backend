@@ -24,15 +24,15 @@ public class PermissionController {
 
     @PostMapping
     @Operation(
-            description = "Register User",
-            summary = "Register User",
+            description = "Add a new permission to the system",
+            summary = "Add Permission",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
-                            responseCode = "200"
+                            description = "Permission Successfully Created",
+                            responseCode = "201"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<Permissions> addPermission(@RequestBody PermissionsDTO permissionsDTO) {
@@ -44,15 +44,15 @@ public class PermissionController {
 
     @GetMapping
     @Operation(
-            description = "Get All Users for Admin",
-            summary = "Get All Users",
+            description = "Retrieve all permissions for admin",
+            summary = "Retrieve All Permissions",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "Permissions Successfully Retrieved",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public List<Permissions> viewAll() {
@@ -61,15 +61,15 @@ public class PermissionController {
 
     @GetMapping("/{id}")
     @Operation(
-            description = "Get User",
-            summary = "Get Users",
+            description = "Search permission by id",
+            summary = "Search Permissions",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "Permission Successfully Retrieved",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity searchPermission(@PathVariable long id) {

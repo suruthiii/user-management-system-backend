@@ -26,15 +26,15 @@ public class UserRoleController {
 
     @GetMapping
     @Operation(
-            description = "Get All Users for Admin",
-            summary = "Get All Users",
+            description = "Retrieve all user roles for admin",
+            summary = "Retrieve All User Roles",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "User Roles Successfully Retrieved",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public List<UserRoles> viewAllUserRoles() {
@@ -43,15 +43,15 @@ public class UserRoleController {
 
     @GetMapping("/{id}")
     @Operation(
-            description = "Get User",
-            summary = "Get Users",
+            description = "Search user role by id",
+            summary = "Search User Roles",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "User Role Successfully Retrieved",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<UserRoles> searchUserRole(@PathVariable long id) {
@@ -60,15 +60,15 @@ public class UserRoleController {
 
     @PutMapping("/{id}")
     @Operation(
-            description = "Update User",
-            summary = "Update User",
+            description = "Update user role by id",
+            summary = "Update User Roles",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
+                            description = "User Role Successfully Updated",
                             responseCode = "200"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<UserRoles> updateUserRole(@PathVariable long id, @RequestBody UserRolesDTO userRolesDTO) {
@@ -87,15 +87,15 @@ public class UserRoleController {
 
     @PostMapping
     @Operation(
-            description = "Update User",
-            summary = "Update User",
+            description = "Add user role for admin",
+            summary = "Add User Role",
             responses = {
                     @ApiResponse(
-                            description = "Successful",
-                            responseCode = "200"
+                            description = "User Role Successfully Created",
+                            responseCode = "201"
                     ),
                     @ApiResponse(
-                            description = "Unauthorized / Invalid Token",
+                            description = "Forbidden",
                             responseCode = "403")
             })
     public ResponseEntity<UserRoles> addUserRole(@RequestBody UserRolesDTO userRolesDTO) {
