@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(
                 title = "User Management Service",
                 version = "1.0",
-                description = "API documentation for the Sri Care Backend",
+                description = "API documentation for ABC company User Management System Backend",
                 contact = @Contact(
                         name = "Suruthi Manivannan",
                         email = "suruthi0611@gmail.com"

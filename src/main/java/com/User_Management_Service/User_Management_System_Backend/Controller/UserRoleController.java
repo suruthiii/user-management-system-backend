@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Tag(name = "User Role Controller")
 @RestController
-@RequestMapping(path = "/userRoles")
+@RequestMapping(path = "userRoles/")
 @RequiredArgsConstructor
 public class UserRoleController {
     private final UserRoleService userRoleService;
@@ -26,7 +26,7 @@ public class UserRoleController {
 
     @GetMapping
     @Operation(
-            description = "Retrieve all user roles for admin",
+            description = "Retrieve all user roles",
             summary = "Retrieve All User Roles",
             responses = {
                     @ApiResponse(
@@ -41,7 +41,7 @@ public class UserRoleController {
         return userRoleService.viewAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @Operation(
             description = "Search user role by id",
             summary = "Search User Roles",
@@ -58,7 +58,7 @@ public class UserRoleController {
         return ResponseEntity.ok(userRoleService.searchUserRole(id));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     @Operation(
             description = "Update user role by id",
             summary = "Update User Roles",
@@ -87,7 +87,7 @@ public class UserRoleController {
 
     @PostMapping
     @Operation(
-            description = "Add user role for admin",
+            description = "Add user role",
             summary = "Add User Role",
             responses = {
                     @ApiResponse(

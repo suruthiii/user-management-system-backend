@@ -1,10 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
 import com.User_Management_Service.User_Management_System_Backend.DTO.PermissionsDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.RegisterDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.ReqRes;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Permissions;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Service.PermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,7 +14,7 @@ import java.util.List;
 
 @Tag(name = "Permission Controller")
 @RestController
-@RequestMapping(path = "/permissions")
+@RequestMapping(path = "permissions/")
 @RequiredArgsConstructor
 public class PermissionController {
     private final PermissionService permissionService;
@@ -59,7 +56,7 @@ public class PermissionController {
         return permissionService.viewAll();
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     @Operation(
             description = "Search permission by id",
             summary = "Search Permissions",

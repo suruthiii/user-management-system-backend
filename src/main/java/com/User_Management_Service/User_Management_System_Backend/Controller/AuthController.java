@@ -1,8 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
 import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.RegisterDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.ReqRes;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
 import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Authentication Controller")
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "auth/")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
@@ -48,7 +47,7 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> login(@RequestBody LoginDTO req) {
+    public ResponseEntity<RequestResponse> login(@RequestBody LoginDTO req) {
         return ResponseEntity.ok(authService.login(req));
     }
 
@@ -64,7 +63,7 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes req) {
+    public ResponseEntity<RequestResponse> refreshToken(@RequestBody RequestResponse req) {
         return ResponseEntity.ok(authService.refreshToken(req));
     }
 }

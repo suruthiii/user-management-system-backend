@@ -1,6 +1,5 @@
 package com.User_Management_Service.User_Management_System_Backend.Entity;
 
-import com.User_Management_Service.User_Management_System_Backend.Enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -36,9 +35,6 @@ public class Users implements UserDetails {
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
-
-    @Column(name = "status")
-    private UserStatus status;
 
     @ManyToOne
     @JoinColumn(name = "userRole_id")

@@ -1,89 +1,91 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.ReqRes;
-import com.User_Management_Service.User_Management_System_Backend.DTO.RegisterDTO;
-import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
-import com.User_Management_Service.User_Management_System_Backend.Repository.UserRoleRepository;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final UsersRepository usersRepository;
-    private final JwtUtils jwtUtils;
-    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    private final UserRoleRepository userRoleRepository;
 
-    public ReqRes viewUserDetails() {
-        ReqRes resp = new ReqRes();
+    public RequestResponse viewUserDetails() {
+        RequestResponse response = new RequestResponse();
+
         try {
             List<Users> result = usersRepository.findAll();
+
             if (!result.isEmpty()) {
-                resp.setUsersList(result);
-                resp.setStatusCode(200);
-                resp.setMessage("Successful");
+                response.setUsersList(result);
+                response.setStatusCode(200);
+                response.setMessage("Successful");
             } else {
-                resp.setStatusCode(404);
-                resp.setMessage("No users found");
+                response.setStatusCode(404);
+                response.setMessage("No users found");
             }
-        } catch (Exception e) {
-            resp.setStatusCode(500);
-            resp.setError("Error occurred: " + e.getMessage());
         }
-        return resp;
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setError("Error occurred: " + e.getMessage());
+        }
+
+        return response;
     }
 
-    public ReqRes searchUser(Long id) {
-        ReqRes resp = new ReqRes();
+    public RequestResponse searchUser(Long id) {
+        RequestResponse response = new RequestResponse();
+
         try {
             Users userById = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-            resp.setUsers(userById);
-            resp.setStatusCode(200);
-            resp.setMessage("User with id " + id + " found Successfully");
+            response.setUsers(userById);
+            response.setStatusCode(200);
+            response.setMessage("User with id " + id + " found Successfully");
 
-        } catch (Exception e) {
-            resp.setStatusCode(500);
-            resp.setError("Error occurred: " + e.getMessage());
         }
-        return resp;
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setError("Error occurred: " + e.getMessage());
+        }
+        return response;
     }
 
-    public ReqRes deleteUser(Long id) {
-        ReqRes resp = new ReqRes();
+    public RequestResponse deleteUser(Long id) {
+        RequestResponse response = new RequestResponse();
+
         try {
             Optional<Users> usersOptional = usersRepository.findById(id);
+
             if (usersOptional.isPresent()) {
                 usersRepository.deleteById(id);
-                resp.setStatusCode(200);
-                resp.setMessage("User deleted Successfully");
-            } else {
-                resp.setStatusCode(404);
-                resp.setMessage("User not found deletion");
+                response.setStatusCode(200);
+                response.setMessage("User deleted Successfully");
             }
-        } catch (Exception e) {
-            resp.setStatusCode(500);
-            resp.setError("Error occurred: " + e.getMessage());
+            else {
+                response.setStatusCode(404);
+                response.setMessage("User not found deletion");
+            }
         }
-        return resp;
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setError("Error occurred: " + e.getMessage());
+        }
+
+        return response;
     }
 
-    public ReqRes updateUser(Long id, Users updateUser) {
-        ReqRes resp = new ReqRes();
+    public RequestResponse updateUser(Long id, Users updateUser) {
+        RequestResponse response = new RequestResponse();
+
         try {
             Optional<Users> usersOptional = usersRepository.findById(id);
+
             if (usersOptional.isPresent()) {
                 Users existingUser = usersOptional.get();
                 existingUser.setEmail(updateUser.getEmail());
@@ -92,18 +94,22 @@ public class UserService {
                 if (updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()) {
                     existingUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
                 }
+
                 Users savedUser = usersRepository.save(existingUser);
-                resp.setUsers(savedUser);
-                resp.setStatusCode(200);
-                resp.setMessage("User updated Successfully");
-            } else {
-                resp.setStatusCode(404);
-                resp.setMessage("User not found update");
+                response.setUsers(savedUser);
+                response.setStatusCode(200);
+                response.setMessage("User updated Successfully");
             }
-        } catch (Exception e) {
-            resp.setStatusCode(500);
-            resp.setError("Error occurred: " + e.getMessage());
+            else {
+                response.setStatusCode(404);
+                response.setMessage("User not found update");
+            }
         }
-        return resp;
+        catch (Exception e) {
+            response.setStatusCode(500);
+            response.setError("Error occurred: " + e.getMessage());
+        }
+
+        return response;
     }
 }

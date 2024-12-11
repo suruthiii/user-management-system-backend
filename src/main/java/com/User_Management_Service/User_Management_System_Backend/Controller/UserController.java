@@ -1,6 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.ReqRes;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
 import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
@@ -14,15 +14,15 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "User Management Controller")
 @RestController
-@RequestMapping(path = "/users")
+@RequestMapping(path = "users/")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
     private final AuthService authService;
 
-    @GetMapping()
+    @GetMapping("/view")
     @Operation(
-            description = "Retrieve all users for admin",
+            description = "Retrieve all users",
             summary = "Retrieve All Users",
             responses = {
                     @ApiResponse(
@@ -33,11 +33,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> viewUserDetails() {
+    public ResponseEntity<RequestResponse> viewUserDetails() {
         return ResponseEntity.ok(userService.viewUserDetails());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     @Operation(
             description = "Search user by id",
             summary = "Search Users",
@@ -50,11 +50,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> searchUser(@PathVariable long id) {
-        return ResponseEntity.ok(userService.searchUser(id));
+    public ResponseEntity<RequestResponse> searchUser(@PathVariable long userId) {
+        return ResponseEntity.ok(userService.searchUser(userId));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     @Operation(
             description = "Update user by id",
             summary = "Update User",
@@ -67,11 +67,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> updateUser(@PathVariable long id, @RequestBody Users req) {
-        return ResponseEntity.ok(userService.updateUser(id, req));
+    public ResponseEntity<RequestResponse> updateUser(@PathVariable long userId, @RequestBody Users req) {
+        return ResponseEntity.ok(userService.updateUser(userId, req));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{userId}")
     @Operation(
             description = "Delete user by id",
             summary = "Delete User",
@@ -84,8 +84,8 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> deleteUser(@PathVariable long id) {
-        return ResponseEntity.ok(userService.deleteUser(id));
+    public ResponseEntity<RequestResponse> deleteUser(@PathVariable long userId) {
+        return ResponseEntity.ok(userService.deleteUser(userId));
     }
 
     @PostMapping()
