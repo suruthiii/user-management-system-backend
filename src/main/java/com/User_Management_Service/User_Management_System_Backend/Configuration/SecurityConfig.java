@@ -52,11 +52,6 @@ public class SecurityConfig {
         List<String> finalReadAccess = readAccess;
         List<String> finalDeleteAccess = deleteAccess;
         List<String> finalCreateAccess = createAccess;
-
-        System.out.println("CREATE " + finalCreateAccess);
-        System.out.println("DELETE " + finalDeleteAccess);
-        System.out.println("UPDATE " + finalUpdateAccess);
-        System.out.println("READ " + finalReadAccess);
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
