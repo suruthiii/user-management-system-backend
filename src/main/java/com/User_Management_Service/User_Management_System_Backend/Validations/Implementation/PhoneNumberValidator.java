@@ -7,21 +7,37 @@ import jakarta.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, String> {
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
 
     @Override
     public boolean isValid(String phoneNumber, ConstraintValidatorContext context) {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
+            // Disable default violation and set custom message for null or empty phone number
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Phone number cannot be null or empty")
                     .addConstraintViolation();
             return false;
         }
 
-        if (!EMAIL_PATTERN.matcher(phoneNumber).matches()) {
+        if (phoneNumber.startsWith("0")) {
+            if (phoneNumber.length() != 10) {
+                // Disable default violation and set custom message for invalid length
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Phone number starting with '0' must be 10 digits long")
+                        .addConstraintViolation();
+                return false;
+            }
+        } else if (phoneNumber.startsWith("+94")) {
+            if (phoneNumber.length() != 12) {
+                // Disable default violation and set custom message for invalid length
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate("Phone number starting with '+94' must be 12 digits long")
+                        .addConstraintViolation();
+                return false;
+            }
+        } else {
+            // Disable default violation and set custom message for invalid prefix
             context.disableDefaultConstraintViolation();
-            context.buildConstraintViolationWithTemplate("Invalid phone number format")
+            context.buildConstraintViolationWithTemplate("Phone number must start with '0' or '+94'")
                     .addConstraintViolation();
             return false;
         }
