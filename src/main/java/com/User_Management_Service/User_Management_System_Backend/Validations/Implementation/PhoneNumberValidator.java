@@ -26,7 +26,9 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
                         .addConstraintViolation();
                 return false;
             }
-        } else if (phoneNumber.startsWith("+94")) {
+        }
+
+        else if (phoneNumber.startsWith("+94")) {
             if (phoneNumber.length() != 12) {
                 // Disable default violation and set custom message for invalid length
                 context.disableDefaultConstraintViolation();
@@ -34,7 +36,9 @@ public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumbe
                         .addConstraintViolation();
                 return false;
             }
-        } else {
+        }
+
+        else {
             // Disable default violation and set custom message for invalid prefix
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("Phone number must start with '0' or '+94'")
