@@ -2,15 +2,18 @@ package com.User_Management_Service.User_Management_System_Backend.Service;
 
 import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UserRoleRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
+@Validated
+@Slf4j
 public class UserRoleService {
     private final UserRoleRepository userRoleRepository;
 
@@ -44,7 +47,7 @@ public class UserRoleService {
         return existingUserRole;
     }
 
-    public UserRoles addUserRole(UserRoles userRole) {
+    public UserRoles addUserRole(@Valid UserRoles userRole) {
         try {
             String error = "";
             if (userRole.getName() == null || userRole.getName().isEmpty()){
@@ -59,6 +62,9 @@ public class UserRoleService {
                 userRoleRepository.save(userRole);
                 log.info("User role added");
             }
+            else{
+                log.error(error);
+            }
         }
         catch (Exception e){
             log.error(e.getMessage());
@@ -68,8 +74,6 @@ public class UserRoleService {
     }
 
     public List<String> getRoleByPermission(String permission){
-        List<String> userRoles = userRoleRepository.findUserRolesWithPermission(permission);
-
-        return userRoles;
+        return userRoleRepository.findUserRolesWithPermission(permission);
     }
 }

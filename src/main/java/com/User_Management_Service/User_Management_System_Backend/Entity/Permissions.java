@@ -3,8 +3,8 @@ package com.User_Management_Service.User_Management_System_Backend.Entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "permissions")

@@ -6,8 +6,10 @@ import com.User_Management_Service.User_Management_System_Backend.Service.Permis
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping(path = "permissions/")
 @RequiredArgsConstructor
+@Validated
 public class PermissionController {
     private final PermissionService permissionService;
 
@@ -32,7 +35,7 @@ public class PermissionController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<Permissions> addPermission(@RequestBody PermissionsDTO permissionsDTO) {
+    public ResponseEntity<Permissions> addPermission(@Valid @RequestBody PermissionsDTO permissionsDTO) {
         Permissions permission = new Permissions();
         permission.setPermission(permissionsDTO.getName());
         permission.setDescription(permissionsDTO.getDescription());

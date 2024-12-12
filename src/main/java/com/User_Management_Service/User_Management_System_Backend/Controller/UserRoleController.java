@@ -8,8 +8,10 @@ import com.User_Management_Service.User_Management_System_Backend.Service.UserRo
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "userRoles/")
 @RequiredArgsConstructor
+@Validated
 public class UserRoleController {
     private final UserRoleService userRoleService;
     private final PermissionService permissionService;
@@ -98,7 +101,7 @@ public class UserRoleController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<UserRoles> addUserRole(@RequestBody UserRolesDTO userRolesDTO) {
+    public ResponseEntity<UserRoles> addUserRole(@Valid @RequestBody UserRolesDTO userRolesDTO) {
         UserRoles userRole = new UserRoles();
         userRole.setName(userRolesDTO.getName());
         userRole.setDescription(userRolesDTO.getDescription());

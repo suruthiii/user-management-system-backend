@@ -1,16 +1,16 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
+import com.User_Management_Service.User_Management_System_Backend.DTO.ReqRes;
 import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
 import com.User_Management_Service.User_Management_System_Backend.Service.UserService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "User Management Controller")
 @RestController
@@ -33,7 +33,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> viewUserDetails() {
+    public ResponseEntity<ReqRes> viewUserDetails() {
         return ResponseEntity.ok(userService.viewUserDetails());
     }
 
@@ -50,7 +50,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> searchUser(@PathVariable long userId) {
+    public ResponseEntity<ReqRes> searchUser(@PathVariable long userId) {
         return ResponseEntity.ok(userService.searchUser(userId));
     }
 
@@ -67,7 +67,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> updateUser(@PathVariable long userId, @RequestBody Users req) {
+    public ResponseEntity<ReqRes> updateUser(@PathVariable long userId, @RequestBody Users req) {
         return ResponseEntity.ok(userService.updateUser(userId, req));
     }
 
@@ -84,7 +84,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> deleteUser(@PathVariable long userId) {
+    public ResponseEntity<ReqRes> deleteUser(@PathVariable long userId) {
         return ResponseEntity.ok(userService.deleteUser(userId));
     }
 
