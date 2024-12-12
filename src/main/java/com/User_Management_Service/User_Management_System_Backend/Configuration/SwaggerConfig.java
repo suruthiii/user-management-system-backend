@@ -48,5 +48,5 @@ import org.springframework.context.annotation.Configuration;
         in = io.swagger.v3.oas.annotations.enums.SecuritySchemeIn.HEADER,
         description = "JWT auth description"
 )
-public class SwaggerConfiguration {
+public class SwaggerConfig {
 }

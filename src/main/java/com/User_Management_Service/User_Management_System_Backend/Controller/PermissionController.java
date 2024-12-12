@@ -39,7 +39,7 @@ public class PermissionController {
         Permissions permission = new Permissions();
         permission.setPermission(permissionsDTO.getName());
         permission.setDescription(permissionsDTO.getDescription());
-        return ResponseEntity.status(201).body(permissionService.add(permission));
+        return ResponseEntity.status(201).body(permissionService.addPermission(permission));
     }
 
     @GetMapping
@@ -56,7 +56,7 @@ public class PermissionController {
                             responseCode = "403")
             })
     public List<Permissions> viewAll() {
-        return permissionService.viewAll();
+        return permissionService.viewAllPermissions();
     }
 
     @GetMapping("{id}")
@@ -73,6 +73,6 @@ public class PermissionController {
                             responseCode = "403")
             })
     public ResponseEntity searchPermission(@PathVariable long id) {
-        return ResponseEntity.ok(permissionService.searchUser(id));
+        return ResponseEntity.ok(permissionService.searchPermission(id));
     }
 }

@@ -17,25 +17,12 @@ import java.util.List;
 public class PermissionService {
     private final PermissionRepository permissionRepository;
 
-    public Permissions add(@Valid Permissions permission) {
+    public Permissions addPermission(@Valid Permissions permission) {
         try{
-            String error = "";
-            if (permission.getPermission() == null || permission.getPermission().isEmpty()){
-                error = "Permission cannot be null";
-            }
-
-            if (permission.getDescription() == null || permission.getDescription().isEmpty()){
-                error = "Description cannot be null";
-            }
-
-            if (error.isEmpty()){
-                permissionRepository.save(permission);
-                log.info("Permission added successfully");
-            }
-            else {
-                log.error(error);
-            }
+            permissionRepository.save(permission);
+            log.info("Permission added successfully");
         }
+
         catch (Exception e){
             log.error(e.getMessage());
         }
@@ -43,11 +30,11 @@ public class PermissionService {
         return permission;
     }
 
-    public List<Permissions> viewAll() {
+    public List<Permissions> viewAllPermissions() {
         return permissionRepository.findAll();
     }
 
-    public Permissions searchUser(Long id) {
+    public Permissions searchPermission(Long id) {
         return permissionRepository.findById(id).orElseThrow(() -> new RuntimeException("Permission not found"));
     }
 }

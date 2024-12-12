@@ -53,10 +53,6 @@ public class SecurityConfig {
         List<String> finalDeleteAccess = deleteAccess;
         List<String> finalCreateAccess = createAccess;
 
-        System.out.println("CREATE " + finalCreateAccess);
-        System.out.println("DELETE " + finalDeleteAccess);
-        System.out.println("UPDATE " + finalUpdateAccess);
-        System.out.println("READ " + finalReadAccess);
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
@@ -80,6 +76,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+
         return daoAuthenticationProvider;
     }
 

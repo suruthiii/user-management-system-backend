@@ -41,7 +41,7 @@ public class UserRoleController {
                             responseCode = "403")
             })
     public List<UserRoles> viewAllUserRoles() {
-        return userRoleService.viewAll();
+        return userRoleService.viewAllUserRoles();
     }
 
     @GetMapping("{id}")
@@ -81,7 +81,7 @@ public class UserRoleController {
 
         // Map permission IDs to Permission entities
         Set<Permissions> permissions = userRolesDTO.getPermissionIds().stream()
-                .map(permissionService::searchUser)
+                .map(permissionService::searchPermission)
                 .collect(Collectors.toSet());
         userRole.setPermissions(permissions);
 
@@ -108,7 +108,7 @@ public class UserRoleController {
 
         // Map permission IDs to Permission entities
         Set<Permissions> permissions = userRolesDTO.getPermissionIds().stream()
-                .map(permissionService::searchUser)
+                .map(permissionService::searchPermission)
                 .collect(Collectors.toSet());
         userRole.setPermissions(permissions);
 

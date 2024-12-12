@@ -1,7 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
 import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.ReqRes;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
 import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
@@ -53,7 +53,7 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> login(@Valid @RequestBody LoginDTO req) {
+    public ResponseEntity<RequestResponse> login(@Valid @RequestBody LoginDTO req) {
         return ResponseEntity.ok(authService.login(req));
     }
 
@@ -69,7 +69,7 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<ReqRes> refreshToken(@RequestBody ReqRes req) {
+    public ResponseEntity<RequestResponse> refreshToken(@RequestBody RequestResponse req) {
         return ResponseEntity.ok(authService.refreshToken(req));
     }
 }

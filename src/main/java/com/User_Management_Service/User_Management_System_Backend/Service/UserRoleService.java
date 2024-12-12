@@ -17,7 +17,7 @@ import java.util.List;
 public class UserRoleService {
     private final UserRoleRepository userRoleRepository;
 
-    public List<UserRoles> viewAll() {
+    public List<UserRoles> viewAllUserRoles() {
         return userRoleRepository.findAll();
     }
 
@@ -40,6 +40,7 @@ public class UserRoleService {
             userRoleRepository.save(existingUserRole);
             log.info("User role updated");
         }
+
         catch (Exception e){
             log.error(e.getMessage());
         }
@@ -62,10 +63,12 @@ public class UserRoleService {
                 userRoleRepository.save(userRole);
                 log.info("User role added");
             }
+
             else{
                 log.error(error);
             }
         }
+
         catch (Exception e){
             log.error(e.getMessage());
         }

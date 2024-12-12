@@ -16,34 +16,36 @@ import java.util.function.Function;
 
 @Service
 public class JwtUtils {
-    private SecretKey Key;
+    private final SecretKey key;
     private static final long EXPIRATION_TIME = 86400000;
 
     public JwtUtils() {
         String secretString = "qwertyuiopasdfghjklzxcvbnmqwertyuiopasdfghjklzxcvbnm";
         byte[] keyBytes = Base64.getDecoder().decode(secretString.getBytes(StandardCharsets.UTF_8));
-        this.Key = new SecretKeySpec(keyBytes, "HmacSHA256");
+        this.key = new SecretKeySpec(keyBytes, "HmacSHA256");
     }
 
     public String generateToken(UserDetails userDetails) {
         Users user = (Users) userDetails;
+
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("userId", user.getId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(Key)
+                .signWith(key)
                 .compact();
     }
 
     public String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails) {
         Users user = (Users) userDetails;
+
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("userId", user.getId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(Key)
+                .signWith(key)
                 .compact();
     }
 
@@ -52,7 +54,7 @@ public class JwtUtils {
     }
 
     private <T> T extractClaims(String token, Function<Claims, T> claimsTFunction) {
-        return claimsTFunction.apply(Jwts.parser().verifyWith(Key).build().parseSignedClaims(token).getPayload());
+        return claimsTFunction.apply(Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload());
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
