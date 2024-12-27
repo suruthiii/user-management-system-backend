@@ -1,28 +1,23 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
-import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
+import com.User_Management_Service.User_Management_System_Backend.DTO.*;
 import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Enums.UserStatus;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UserRoleRepository;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UsersRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-import java.util.HashMap;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Validated
 public class AuthService {
     private final UsersRepository usersRepository;
     private final JwtUtils jwtUtils;
@@ -30,10 +25,13 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
 
-    public Users register(@Valid UsersDTO registrationRequest) {
+    public ResponseEntity<RegistrationResponseDTO> register(UsersDTO registrationRequest) {
         Users newUser = new Users();
 
-        // Populate user details
+        if (usersRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
+            return ResponseEntity.status(400).body(new RegistrationResponseDTO("Email", "Email is already in use"));
+        }
+
         newUser.setEmail(registrationRequest.getEmail());
         newUser.setName(registrationRequest.getName());
         newUser.setPhoneNumber(registrationRequest.getPhoneNumber());
@@ -51,17 +49,18 @@ public class AuthService {
         newUser.setUserRole(role);
 
         try{
-            newUser =  usersRepository.save(newUser);
+            usersRepository.save(newUser);
+            return ResponseEntity.status(200).body(new RegistrationResponseDTO("No Error Found", "User Successfully added"));
         }
 
         catch (Exception e) {
             log.error(e.getMessage());
+            return ResponseEntity.status(500).body(new RegistrationResponseDTO("Error Found", "Can't add user"));
         }
-
-        return newUser;
     }
 
-    public RequestResponse login(@Valid LoginDTO loginRequest) {
+
+    public ResponseEntity<RequestResponse> login(LoginDTO loginRequest) {
         RequestResponse response = new RequestResponse();
 
         try {
@@ -69,45 +68,46 @@ public class AuthService {
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             Users user = usersRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
             String jwt = jwtUtils.generateToken(user);
-            String refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+            String refreshToken = jwtUtils.generateRefreshToken(user);
 
-            response.setStatusCode(200);
             response.setToken(jwt);
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Logged in Successfully");
+
+            return ResponseEntity.status(200).body(response);
         }
 
         catch (Exception e) {
-            response.setStatusCode(500);
             response.setError(e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
-
-        return response;
     }
 
-    public RequestResponse refreshToken(RequestResponse refreshTokenRequest) {
+    public ResponseEntity<RequestResponse> refreshToken(RequestResponse request) {
         RequestResponse response = new RequestResponse();
 
         try {
-            String email = jwtUtils.extractUsername(refreshTokenRequest.getToken());
+            String email = jwtUtils.extractUsername(request.getToken());
             Users user = usersRepository.findByEmail(email).orElseThrow();
 
-            if (jwtUtils.isTokenValid(refreshTokenRequest.getToken(), user)) {
+            if (jwtUtils.isTokenValid(request.getToken(), user)) {
                 String jwt = jwtUtils.generateToken(user);
-                response.setStatusCode(200);
+                String refreshToken = jwtUtils.generateRefreshToken(user);
                 response.setToken(jwt);
-                response.setRefreshToken(refreshTokenRequest.getRefreshToken());
+                response.setRefreshToken(refreshToken);
                 response.setExpirationTime("24Hrs");
                 response.setMessage("Token Refreshed Successfully");
+
+                return ResponseEntity.status(200).body(response);
             }
+
+            return ResponseEntity.status(403).body(response);
         }
 
         catch (Exception e) {
-            response.setStatusCode(500);
             response.setError(e.getMessage());
+            return ResponseEntity.status(500).body(response);
         }
-
-        return response;
     }
 }

@@ -1,6 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RegistrationResponseDTO;
+import com.User_Management_Service.User_Management_System_Backend.DTO.UserResponseDTO;
 import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
@@ -11,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Tag(name = "User Controller")
 @RestController
@@ -33,11 +36,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> viewUserDetails() {
-        return ResponseEntity.ok(userService.viewUserDetails());
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/view/{userId}")
     @Operation(
             description = "Search user by id",
             summary = "Search Users",
@@ -50,11 +53,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> searchUser(@PathVariable long userId) {
+    public ResponseEntity<UserResponseDTO> searchUser(@PathVariable long userId) {
         return ResponseEntity.ok(userService.searchUser(userId));
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("/update/{userId}")
     @Operation(
             description = "Update user by id",
             summary = "Update User",
@@ -67,11 +70,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> updateUser(@PathVariable long userId, @RequestBody Users req) {
-        return ResponseEntity.ok(userService.updateUser(userId, req));
+    public ResponseEntity<Users> updateUser(@PathVariable long userId, @RequestBody Users request) {
+        return ResponseEntity.ok(userService.updateUser(userId, request));
     }
 
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     @Operation(
             description = "Delete user by id",
             summary = "Delete User",
@@ -84,11 +87,11 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> deleteUser(@PathVariable long userId) {
+    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable long userId) {
         return ResponseEntity.ok(userService.deleteUser(userId));
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     @Operation(
             description = "Register a new user to the system",
             summary = "Register User",
@@ -100,7 +103,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<Users> createUser(@RequestBody UsersDTO reg) {
-        return ResponseEntity.ok(authService.register(reg));
+    public ResponseEntity<RegistrationResponseDTO> createUser(@RequestBody UsersDTO request) {
+        return authService.register(request);
     }
 }

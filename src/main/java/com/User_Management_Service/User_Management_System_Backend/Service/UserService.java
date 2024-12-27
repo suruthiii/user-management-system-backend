@@ -1,124 +1,82 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
+import com.User_Management_Service.User_Management_System_Backend.DTO.UserResponseDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public RequestResponse viewUserDetails() {
-        RequestResponse response = new RequestResponse();
-
+    public List<UserResponseDTO> getAllUsers() {
         try {
             List<Users> result = usersRepository.findAll();
-
-            if (!result.isEmpty()) {
-                response.setUsersList(result);
-                response.setStatusCode(200);
-                response.setMessage("Successful");
-            }
-
-            else {
-                response.setStatusCode(404);
-                response.setMessage("No users found");
-            }
+            return result.stream()
+                    .map(user -> new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getGender(), user.getDateOfBirth(), user.getStatus(), user.getUserRole()))
+                    .collect(Collectors.toList());
         }
 
         catch (Exception e) {
-            response.setStatusCode(500);
-            response.setError("Error occurred: " + e.getMessage());
+            log.error(e.getMessage());
+            return Collections.emptyList();
         }
-
-        return response;
     }
 
-    public RequestResponse searchUser(Long id) {
-        RequestResponse response = new RequestResponse();
+    public UserResponseDTO searchUser(Long id) {
+        Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        return new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getGender(), user.getDateOfBirth(), user.getStatus(), user.getUserRole());
+    }
 
+    public UserResponseDTO deleteUser(Long id) {
         try {
-            Users userById = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-            response.setUsers(userById);
-            response.setStatusCode(200);
-            response.setMessage("User with id " + id + " found Successfully");
-
+            Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            usersRepository.deleteById(id);
+            return new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getGender(), user.getDateOfBirth(), user.getStatus(), user.getUserRole());
         }
 
         catch (Exception e) {
-            response.setStatusCode(500);
-            response.setError("Error occurred: " + e.getMessage());
+            log.error(e.getMessage());
+            return null;
         }
-
-        return response;
     }
 
-    public RequestResponse deleteUser(Long id) {
-        RequestResponse response = new RequestResponse();
-
+    public Users updateUser(Long id, Users updateUser) {
         try {
-            Optional<Users> usersOptional = usersRepository.findById(id);
+            Users existingUser = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
 
-            if (usersOptional.isPresent()) {
-                usersRepository.deleteById(id);
-                response.setStatusCode(200);
-                response.setMessage("User deleted Successfully");
+            if (updateUser.getDateOfBirth() != null) {
+                existingUser.setDateOfBirth(updateUser.getDateOfBirth());
             }
 
-            else {
-                response.setStatusCode(404);
-                response.setMessage("User not found deletion");
-            }
-        }
-
-        catch (Exception e) {
-            response.setStatusCode(500);
-            response.setError("Error occurred: " + e.getMessage());
-        }
-
-        return response;
-    }
-
-    public RequestResponse updateUser(Long id, Users updateUser) {
-        RequestResponse response = new RequestResponse();
-
-        try {
-            Optional<Users> usersOptional = usersRepository.findById(id);
-
-            if (usersOptional.isPresent()) {
-                Users existingUser = usersOptional.get();
-                existingUser.setEmail(updateUser.getEmail());
+            if (updateUser.getName() != null && !updateUser.getName().isEmpty()) {
                 existingUser.setName(updateUser.getName());
-
-                if (updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()) {
-                    existingUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
-                }
-
-                Users savedUser = usersRepository.save(existingUser);
-                response.setUsers(savedUser);
-                response.setStatusCode(200);
-                response.setMessage("User updated Successfully");
             }
 
-            else {
-                response.setStatusCode(404);
-                response.setMessage("User not found update");
+            if (updateUser.getPhoneNumber() != null && !updateUser.getPhoneNumber().isEmpty()) {
+                existingUser.setPhoneNumber(updateUser.getPhoneNumber());
             }
+
+            if (updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()) {
+                existingUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
+            }
+
+            return usersRepository.save(existingUser);
         }
 
         catch (Exception e) {
-            response.setStatusCode(500);
-            response.setError("Error occurred: " + e.getMessage());
+            log.error(e.getMessage());
+            return updateUser;
         }
-
-        return response;
     }
 }

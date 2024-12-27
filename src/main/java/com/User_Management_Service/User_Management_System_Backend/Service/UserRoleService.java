@@ -2,7 +2,6 @@ package com.User_Management_Service.User_Management_System_Backend.Service;
 
 import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UserRoleRepository;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,25 +47,10 @@ public class UserRoleService {
         return existingUserRole;
     }
 
-    public UserRoles addUserRole(@Valid UserRoles userRole) {
+    public UserRoles addUserRole(UserRoles userRole) {
         try {
-            String error = "";
-            if (userRole.getName() == null || userRole.getName().isEmpty()){
-                error = "Name cannot be empty";
-            }
-
-            if (userRole.getDescription() == null || userRole.getDescription().isEmpty()){
-                error = "Description cannot be empty";
-            }
-
-            if (error.isEmpty()){
-                userRoleRepository.save(userRole);
-                log.info("User role added");
-            }
-
-            else{
-                log.error(error);
-            }
+            userRoleRepository.save(userRole);
+            log.info("User role added");
         }
 
         catch (Exception e){

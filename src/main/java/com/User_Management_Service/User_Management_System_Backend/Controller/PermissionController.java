@@ -72,7 +72,7 @@ public class PermissionController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity searchPermission(@PathVariable long id) {
+    public ResponseEntity<Permissions> searchPermission(@PathVariable long id) {
         return ResponseEntity.ok(permissionService.searchPermission(id));
     }
 }

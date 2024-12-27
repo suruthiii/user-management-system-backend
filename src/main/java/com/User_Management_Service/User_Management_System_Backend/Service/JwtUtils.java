@@ -11,7 +11,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.function.Function;
 
 @Service
@@ -37,7 +36,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String generateRefreshToken(HashMap<String, Object> claims, UserDetails userDetails) {
+    public String generateRefreshToken(UserDetails userDetails) {
         Users user = (Users) userDetails;
 
         return Jwts.builder()

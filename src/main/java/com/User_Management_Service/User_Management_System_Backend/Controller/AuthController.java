@@ -1,9 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
-import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
+import com.User_Management_Service.User_Management_System_Backend.DTO.*;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,8 +34,8 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<Users> register(@Valid @RequestBody UsersDTO reg) {
-        return ResponseEntity.ok(authService.register(reg));
+    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody UsersDTO request) {
+        return authService.register(request);
     }
 
     @PostMapping("/login")
@@ -53,8 +50,8 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> login(@Valid @RequestBody LoginDTO req) {
-        return ResponseEntity.ok(authService.login(req));
+    public ResponseEntity<RequestResponse> login(@Valid @RequestBody LoginDTO request) {
+        return authService.login(request);
     }
 
     @PostMapping("/refresh")
@@ -69,7 +66,7 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RequestResponse> refreshToken(@RequestBody RequestResponse req) {
-        return ResponseEntity.ok(authService.refreshToken(req));
+    public ResponseEntity<RequestResponse> refreshToken(@RequestBody RequestResponse request) {
+        return authService.refreshToken(request);
     }
 }
