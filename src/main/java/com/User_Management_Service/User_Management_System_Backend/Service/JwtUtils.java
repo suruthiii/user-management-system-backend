@@ -1,6 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
-import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
+import com.User_Management_Service.User_Management_System_Backend.Entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,7 +25,7 @@ public class JwtUtils {
     }
 
     public String generateToken(UserDetails userDetails) {
-        Users user = (Users) userDetails;
+        User user = (User) userDetails;
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())
@@ -37,7 +37,7 @@ public class JwtUtils {
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
-        Users user = (Users) userDetails;
+        User user = (User) userDetails;
 
         return Jwts.builder()
                 .subject(userDetails.getUsername())

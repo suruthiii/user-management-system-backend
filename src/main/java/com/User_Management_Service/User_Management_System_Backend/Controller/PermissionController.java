@@ -1,7 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.PermissionsDTO;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Permissions;
+import com.User_Management_Service.User_Management_System_Backend.DTO.PermissionDTO;
+import com.User_Management_Service.User_Management_System_Backend.Entity.Permission;
 import com.User_Management_Service.User_Management_System_Backend.Service.PermissionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,10 +35,10 @@ public class PermissionController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<Permissions> addPermission(@Valid @RequestBody PermissionsDTO permissionsDTO) {
-        Permissions permission = new Permissions();
-        permission.setPermission(permissionsDTO.getName());
-        permission.setDescription(permissionsDTO.getDescription());
+    public ResponseEntity<Permission> addPermission(@Valid @RequestBody PermissionDTO permissionDTO) {
+        Permission permission = new Permission();
+        permission.setName(permissionDTO.getName());
+        permission.setDescription(permissionDTO.getDescription());
         return ResponseEntity.status(201).body(permissionService.addPermission(permission));
     }
 
@@ -55,7 +55,7 @@ public class PermissionController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public List<Permissions> viewAll() {
+    public List<Permission> viewAll() {
         return permissionService.viewAllPermissions();
     }
 
@@ -72,7 +72,7 @@ public class PermissionController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<Permissions> searchPermission(@PathVariable long id) {
+    public ResponseEntity<Permission> searchPermission(@PathVariable long id) {
         return ResponseEntity.ok(permissionService.searchPermission(id));
     }
 }

@@ -1,8 +1,8 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.UserRolesDTO;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Permissions;
-import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
+import com.User_Management_Service.User_Management_System_Backend.DTO.UserRoleDTO;
+import com.User_Management_Service.User_Management_System_Backend.Entity.Permission;
+import com.User_Management_Service.User_Management_System_Backend.Entity.UserRole;
 import com.User_Management_Service.User_Management_System_Backend.Service.PermissionService;
 import com.User_Management_Service.User_Management_System_Backend.Service.UserRoleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +40,7 @@ public class UserRoleController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public List<UserRoles> viewAllUserRoles() {
+    public List<UserRole> viewAllUserRoles() {
         return userRoleService.viewAllUserRoles();
     }
 
@@ -57,7 +57,7 @@ public class UserRoleController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<UserRoles> searchUserRole(@PathVariable long id) {
+    public ResponseEntity<UserRole> searchUserRole(@PathVariable long id) {
         return ResponseEntity.ok(userRoleService.searchUserRole(id));
     }
 
@@ -74,13 +74,13 @@ public class UserRoleController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<UserRoles> updateUserRole(@PathVariable long id, @RequestBody UserRolesDTO userRolesDTO) {
-        UserRoles userRole = new UserRoles();
-        userRole.setName(userRolesDTO.getName());
-        userRole.setDescription(userRolesDTO.getDescription());
+    public ResponseEntity<UserRole> updateUserRole(@PathVariable long id, @RequestBody UserRoleDTO userRoleDTO) {
+        UserRole userRole = new UserRole();
+        userRole.setName(userRoleDTO.getName());
+        userRole.setDescription(userRoleDTO.getDescription());
 
         // Map permission IDs to Permission entities
-        Set<Permissions> permissions = userRolesDTO.getPermissionIds().stream()
+        Set<Permission> permissions = userRoleDTO.getPermissionIds().stream()
                 .map(permissionService::searchPermission)
                 .collect(Collectors.toSet());
         userRole.setPermissions(permissions);
@@ -101,13 +101,13 @@ public class UserRoleController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<UserRoles> addUserRole(@Valid @RequestBody UserRolesDTO userRolesDTO) {
-        UserRoles userRole = new UserRoles();
-        userRole.setName(userRolesDTO.getName());
-        userRole.setDescription(userRolesDTO.getDescription());
+    public ResponseEntity<UserRole> addUserRole(@Valid @RequestBody UserRoleDTO userRoleDTO) {
+        UserRole userRole = new UserRole();
+        userRole.setName(userRoleDTO.getName());
+        userRole.setDescription(userRoleDTO.getDescription());
 
         // Map permission IDs to Permission entities
-        Set<Permissions> permissions = userRolesDTO.getPermissionIds().stream()
+        Set<Permission> permissions = userRoleDTO.getPermissionIds().stream()
                 .map(permissionService::searchPermission)
                 .collect(Collectors.toSet());
         userRole.setPermissions(permissions);

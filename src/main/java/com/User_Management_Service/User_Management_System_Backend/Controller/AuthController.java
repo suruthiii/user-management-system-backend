@@ -1,6 +1,8 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.*;
+import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
+import com.User_Management_Service.User_Management_System_Backend.DTO.UserDTO;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,7 +36,7 @@ public class AuthController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RegistrationResponseDTO> register(@Valid @RequestBody UsersDTO request) {
+    public ResponseEntity<String> register(@Valid @RequestBody UserDTO request) {
         return authService.register(request);
     }
 

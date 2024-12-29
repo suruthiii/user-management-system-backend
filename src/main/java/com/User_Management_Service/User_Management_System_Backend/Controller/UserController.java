@@ -1,9 +1,8 @@
 package com.User_Management_Service.User_Management_System_Backend.Controller;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.RegistrationResponseDTO;
+import com.User_Management_Service.User_Management_System_Backend.DTO.UserDTO;
 import com.User_Management_Service.User_Management_System_Backend.DTO.UserResponseDTO;
-import com.User_Management_Service.User_Management_System_Backend.DTO.UsersDTO;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
+import com.User_Management_Service.User_Management_System_Backend.Entity.User;
 import com.User_Management_Service.User_Management_System_Backend.Service.AuthService;
 import com.User_Management_Service.User_Management_System_Backend.Service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,7 +69,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<Users> updateUser(@PathVariable long userId, @RequestBody Users request) {
+    public ResponseEntity<User> updateUser(@PathVariable long userId, @RequestBody User request) {
         return ResponseEntity.ok(userService.updateUser(userId, request));
     }
 
@@ -87,8 +86,8 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<UserResponseDTO> deleteUser(@PathVariable long userId) {
-        return ResponseEntity.ok(userService.deleteUser(userId));
+    public void deleteUser(@PathVariable long userId) {
+        userService.deleteUser(userId);
     }
 
     @PostMapping("/create")
@@ -103,7 +102,7 @@ public class UserController {
                             description = "Forbidden",
                             responseCode = "403")
             })
-    public ResponseEntity<RegistrationResponseDTO> createUser(@RequestBody UsersDTO request) {
+    public ResponseEntity<String> createUser(@RequestBody UserDTO request) {
         return authService.register(request);
     }
 }

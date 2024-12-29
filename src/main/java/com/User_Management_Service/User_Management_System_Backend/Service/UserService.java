@@ -1,7 +1,8 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
 import com.User_Management_Service.User_Management_System_Backend.DTO.UserResponseDTO;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
+import com.User_Management_Service.User_Management_System_Backend.Entity.User;
+import com.User_Management_Service.User_Management_System_Backend.Exceptions.UserNotFoundException;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class UserService {
 
     public List<UserResponseDTO> getAllUsers() {
         try {
-            List<Users> result = usersRepository.findAll();
+            List<User> result = usersRepository.findAll();
             return result.stream()
                     .map(user -> new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getGender(), user.getDateOfBirth(), user.getStatus(), user.getUserRole()))
                     .collect(Collectors.toList());
@@ -34,26 +35,25 @@ public class UserService {
     }
 
     public UserResponseDTO searchUser(Long id) {
-        Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = usersRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
         return new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getGender(), user.getDateOfBirth(), user.getStatus(), user.getUserRole());
     }
 
-    public UserResponseDTO deleteUser(Long id) {
+    public void deleteUser(Long id) {
         try {
-            Users user = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            User user = usersRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
             usersRepository.deleteById(id);
-            return new UserResponseDTO(user.getId(), user.getName(), user.getEmail(), user.getPhoneNumber(), user.getGender(), user.getDateOfBirth(), user.getStatus(), user.getUserRole());
+            log.info("Successfully deleted user {}", id);
         }
 
         catch (Exception e) {
             log.error(e.getMessage());
-            return null;
         }
     }
 
-    public Users updateUser(Long id, Users updateUser) {
+    public User updateUser(Long id, User updateUser) {
         try {
-            Users existingUser = usersRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
+            User existingUser = usersRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
 
             if (updateUser.getDateOfBirth() != null) {
                 existingUser.setDateOfBirth(updateUser.getDateOfBirth());

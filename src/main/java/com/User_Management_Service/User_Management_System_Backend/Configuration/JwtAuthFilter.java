@@ -1,7 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Configuration;
 
 import com.User_Management_Service.User_Management_System_Backend.Service.JwtUtils;
-import com.User_Management_Service.User_Management_System_Backend.Service.UserDetailsService;
+import com.User_Management_Service.User_Management_System_Backend.Service.UserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,7 +21,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
-    private final UserDetailsService ourUserDetailsService;
+    private final UserDetailService ourUserDetailService;
 
 
     @Override
@@ -39,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         userEmail = jwtUtils.extractUsername(jwtToken);
 
         if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = ourUserDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = ourUserDetailService.loadUserByUsername(userEmail);
 
             if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();

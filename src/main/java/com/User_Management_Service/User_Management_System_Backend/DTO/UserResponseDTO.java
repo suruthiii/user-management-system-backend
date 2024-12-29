@@ -1,6 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.DTO;
 
-import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
+import com.User_Management_Service.User_Management_System_Backend.Entity.UserRole;
 import com.User_Management_Service.User_Management_System_Backend.Enums.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,5 +17,5 @@ public class UserResponseDTO {
     private String gender;
     private LocalDate dateOfBirth;
     private UserStatus status;
-    private UserRoles userRole;
+    private UserRole userRole;
 }

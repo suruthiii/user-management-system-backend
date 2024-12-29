@@ -4,8 +4,6 @@ import com.User_Management_Service.User_Management_System_Backend.Validations.Va
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-import java.util.regex.Pattern;
-
 public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, String> {
 
     @Override

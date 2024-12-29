@@ -33,7 +33,7 @@ import org.springframework.context.annotation.Configuration;
                 ),
                 @Server(
                         description = "Production ENV",
-                        url = "https://sri-care.com"
+                        url = "https://abc.com"
                 )
         },
         security = {

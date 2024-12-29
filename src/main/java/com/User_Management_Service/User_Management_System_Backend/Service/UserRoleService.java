@@ -1,6 +1,7 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
-import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
+import com.User_Management_Service.User_Management_System_Backend.Entity.UserRole;
+import com.User_Management_Service.User_Management_System_Backend.Exceptions.ResourceNotFoundException;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,16 +17,16 @@ import java.util.List;
 public class UserRoleService {
     private final UserRoleRepository userRoleRepository;
 
-    public List<UserRoles> viewAllUserRoles() {
+    public List<UserRole> viewAllUserRoles() {
         return userRoleRepository.findAll();
     }
 
-    public UserRoles searchUserRole(Long id) {
-        return userRoleRepository.findById(id).orElseThrow(() -> new RuntimeException("User role not found"));
+    public UserRole searchUserRole(Long id) {
+        return userRoleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User role not found"));
     }
 
-    public UserRoles updateUserRole(Long id, UserRoles userRole) {
-        UserRoles existingUserRole = userRoleRepository.findById(id).orElseThrow(() -> new RuntimeException("User role not found"));
+    public UserRole updateUserRole(Long id, UserRole userRole) {
+        UserRole existingUserRole = userRoleRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User role not found"));
 
         try {
             if (userRole.getName() != null && !userRole.getName().isEmpty()){
@@ -47,7 +48,7 @@ public class UserRoleService {
         return existingUserRole;
     }
 
-    public UserRoles addUserRole(UserRoles userRole) {
+    public UserRole addUserRole(UserRole userRole) {
         try {
             userRoleRepository.save(userRole);
             log.info("User role added");

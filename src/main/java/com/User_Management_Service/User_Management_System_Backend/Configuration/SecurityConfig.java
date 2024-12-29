@@ -1,6 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.Configuration;
 
-import com.User_Management_Service.User_Management_System_Backend.Service.UserDetailsService;
+import com.User_Management_Service.User_Management_System_Backend.Service.UserDetailService;
 import com.User_Management_Service.User_Management_System_Backend.Service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final UserDetailsService ourUserDetailsService;
+    private final UserDetailService ourUserDetailService;
     private final JwtAuthFilter jwtAuthFilter;
 
     @Bean
@@ -74,7 +74,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setUserDetailsService(ourUserDetailsService);
+        daoAuthenticationProvider.setUserDetailsService(ourUserDetailService);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
 
         return daoAuthenticationProvider;

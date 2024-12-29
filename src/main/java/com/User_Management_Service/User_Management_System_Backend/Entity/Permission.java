@@ -9,17 +9,14 @@ import java.util.Set;
 @Entity
 @Table(name = "permissions")
 @Data
-public class Permissions {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Permission extends BaseEntity {
 
     @Column(name = "name", length = 50, nullable = false)
-    private String permission;
+    private String name;
 
     @Column(name = "description")
     private String description;
 
     @ManyToMany(mappedBy = "permissions", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<UserRoles> roles = new HashSet<>();
+    private Set<UserRole> roles = new HashSet<>();
 }

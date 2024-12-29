@@ -1,9 +1,13 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
-import com.User_Management_Service.User_Management_System_Backend.DTO.*;
-import com.User_Management_Service.User_Management_System_Backend.Entity.UserRoles;
-import com.User_Management_Service.User_Management_System_Backend.Entity.Users;
+import com.User_Management_Service.User_Management_System_Backend.DTO.LoginDTO;
+import com.User_Management_Service.User_Management_System_Backend.DTO.RequestResponse;
+import com.User_Management_Service.User_Management_System_Backend.DTO.UserDTO;
+import com.User_Management_Service.User_Management_System_Backend.Entity.User;
+import com.User_Management_Service.User_Management_System_Backend.Entity.UserRole;
 import com.User_Management_Service.User_Management_System_Backend.Enums.UserStatus;
+import com.User_Management_Service.User_Management_System_Backend.Exceptions.ConflictException;
+import com.User_Management_Service.User_Management_System_Backend.Exceptions.ResourceNotFoundException;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UserRoleRepository;
 import com.User_Management_Service.User_Management_System_Backend.Repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +29,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
 
-    public ResponseEntity<RegistrationResponseDTO> register(UsersDTO registrationRequest) {
-        Users newUser = new Users();
+    public ResponseEntity<String> register(UserDTO registrationRequest) {
+        User newUser = new User();
 
         if (usersRepository.findByEmail(registrationRequest.getEmail()).isPresent()) {
-            return ResponseEntity.status(400).body(new RegistrationResponseDTO("Email", "Email is already in use"));
+            log.error("Email [{}] is already taken", registrationRequest.getEmail());
+            throw new ConflictException("The email " + registrationRequest.getEmail() + " is already taken.");
         }
 
         newUser.setEmail(registrationRequest.getEmail());
@@ -39,23 +44,24 @@ public class AuthService {
         newUser.setDateOfBirth(registrationRequest.getDateOfBirth());
         newUser.setPassword(passwordEncoder.encode(registrationRequest.getPassword()));
 
-        // Set default status as ACTIVE
-        newUser.setStatus(UserStatus.ACTIVE);
+        // Set initial status as PENDING
+        newUser.setStatus(UserStatus.PENDING);
 
         // Retrieve role by ID
-        UserRoles role = userRoleRepository.findById(registrationRequest.getUserRoleId())
-                .orElseThrow(() -> new RuntimeException("Role not found with ID: " + registrationRequest.getUserRoleId()));
+        UserRole role = userRoleRepository.findById(registrationRequest.getUserRoleId())
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found with ID: " + registrationRequest.getUserRoleId()));
 
         newUser.setUserRole(role);
 
         try{
             usersRepository.save(newUser);
-            return ResponseEntity.status(200).body(new RegistrationResponseDTO("No Error Found", "User Successfully added"));
+            log.info("User [{}] added", registrationRequest.getEmail());
+            return ResponseEntity.status(200).body("User Successfully added");
         }
 
         catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(500).body(new RegistrationResponseDTO("Error Found", "Can't add user"));
+            return ResponseEntity.status(500).body("Can't add user");
         }
     }
 
@@ -66,7 +72,7 @@ public class AuthService {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-            Users user = usersRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+            User user = usersRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
             String jwt = jwtUtils.generateToken(user);
             String refreshToken = jwtUtils.generateRefreshToken(user);
 
@@ -74,6 +80,11 @@ public class AuthService {
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
             response.setMessage("Logged in Successfully");
+
+            if (user.getStatus() == UserStatus.PENDING){
+                user.setStatus(UserStatus.ACTIVE);
+                usersRepository.save(user);
+            }
 
             return ResponseEntity.status(200).body(response);
         }
@@ -89,7 +100,7 @@ public class AuthService {
 
         try {
             String email = jwtUtils.extractUsername(request.getToken());
-            Users user = usersRepository.findByEmail(email).orElseThrow();
+            User user = usersRepository.findByEmail(email).orElseThrow();
 
             if (jwtUtils.isTokenValid(request.getToken(), user)) {
                 String jwt = jwtUtils.generateToken(user);
