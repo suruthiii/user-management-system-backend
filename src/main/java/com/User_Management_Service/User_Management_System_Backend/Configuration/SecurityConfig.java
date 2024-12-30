@@ -1,15 +1,18 @@
 package com.User_Management_Service.User_Management_System_Backend.Configuration;
 
+import com.User_Management_Service.User_Management_System_Backend.Security.CustomPermissionEvaluator;
 import com.User_Management_Service.User_Management_System_Backend.Service.UserDetailService;
-import com.User_Management_Service.User_Management_System_Backend.Service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,56 +22,36 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.List;
-
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailService ourUserDetailService;
     private final JwtAuthFilter jwtAuthFilter;
+    private final CustomPermissionEvaluator customPermissionEvaluator;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, UserRoleService userRoleService) throws Exception {
-        List<String> readAccess = userRoleService.getRoleByPermission("READ");
-        List<String> createAccess = userRoleService.getRoleByPermission("CREATE");
-        List<String> updateAccess = userRoleService.getRoleByPermission("UPDATE");
-        List<String> deleteAccess = userRoleService.getRoleByPermission("DELETE");
-
-        if (readAccess.isEmpty()) {
-            readAccess = List.of("ADMIN");
-        }
-        if (createAccess.isEmpty()) {
-            createAccess = List.of("ADMIN");
-        }
-        if (updateAccess.isEmpty()) {
-            updateAccess = List.of("ADMIN");
-        }
-        if (deleteAccess.isEmpty()) {
-            deleteAccess = List.of("ADMIN");
-        }
-
-        List<String> finalUpdateAccess = updateAccess;
-        List<String> finalReadAccess = readAccess;
-        List<String> finalDeleteAccess = deleteAccess;
-        List<String> finalCreateAccess = createAccess;
-
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/**", "/public/**").permitAll()
-                        .requestMatchers("/permissions/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/userRoles/**").hasAnyAuthority("ADMIN")
-                        .requestMatchers("/swagger-ui/**", "/api-docs/**").permitAll()
-                        .requestMatchers("/users/view/**").hasAnyAuthority(finalReadAccess.toArray(new String[0]))
-                        .requestMatchers("/users/update/**").hasAnyAuthority(finalUpdateAccess.toArray(new String[0]))
-                        .requestMatchers("/users/delete/**").hasAnyAuthority(finalDeleteAccess.toArray(new String[0]))
-                        .requestMatchers("/users/create/**").hasAnyAuthority(finalCreateAccess.toArray(new String[0]))
-                        .anyRequest().authenticated())
+                        .requestMatchers("/auth/**", "/public/**", "/swagger-ui/**", "/api-docs/**").permitAll()
+                        .requestMatchers("/permissions/**", "/userRoles/**").hasAuthority("ADMIN")
+                        .anyRequest().authenticated()
+                )
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
-                ).build();
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
+    }
+
+    @Bean
+    public MethodSecurityExpressionHandler methodSecurityExpressionHandler() {
+        DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
+        handler.setPermissionEvaluator(customPermissionEvaluator);
+        return handler;
     }
 
     @Bean

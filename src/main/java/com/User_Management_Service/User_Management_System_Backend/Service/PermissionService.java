@@ -1,5 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.Service;
 
+import com.User_Management_Service.User_Management_System_Backend.DTO.PermissionDTO;
 import com.User_Management_Service.User_Management_System_Backend.Entity.Permission;
 import com.User_Management_Service.User_Management_System_Backend.Exceptions.ResourceNotFoundException;
 import com.User_Management_Service.User_Management_System_Backend.Repository.PermissionRepository;
@@ -15,7 +16,11 @@ import java.util.List;
 public class PermissionService {
     private final PermissionRepository permissionRepository;
 
-    public Permission addPermission(Permission permission) {
+    public Permission addPermission(PermissionDTO permissionDTO) {
+        Permission permission = new Permission();
+        permission.setName(permissionDTO.getName());
+        permission.setDescription(permissionDTO.getDescription());
+
         try{
             permissionRepository.save(permission);
             log.info("Permission added successfully");

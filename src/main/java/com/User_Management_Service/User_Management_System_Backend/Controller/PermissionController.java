@@ -36,10 +36,7 @@ public class PermissionController {
                             responseCode = "403")
             })
     public ResponseEntity<Permission> addPermission(@Valid @RequestBody PermissionDTO permissionDTO) {
-        Permission permission = new Permission();
-        permission.setName(permissionDTO.getName());
-        permission.setDescription(permissionDTO.getDescription());
-        return ResponseEntity.status(201).body(permissionService.addPermission(permission));
+        return ResponseEntity.status(201).body(permissionService.addPermission(permissionDTO));
     }
 
     @GetMapping

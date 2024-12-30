@@ -42,7 +42,7 @@ public class User implements UserDetails {
     private UserStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "userRole_id")
+    @JoinColumn(name = "user_role_id")
     private UserRole userRole;
 
     @Override

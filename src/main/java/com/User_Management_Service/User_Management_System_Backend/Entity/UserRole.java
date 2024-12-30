@@ -1,5 +1,6 @@
 package com.User_Management_Service.User_Management_System_Backend.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,7 @@ public class UserRole extends BaseEntity {
     private String description;
 
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<User> users;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -29,6 +31,12 @@ public class UserRole extends BaseEntity {
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "permission_id")
     )
+    @JsonIgnore
     private Set<Permission> permissions = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "UserRoles{id=" + getId() + ", name='" + name + "'}";
+    }
 }
 

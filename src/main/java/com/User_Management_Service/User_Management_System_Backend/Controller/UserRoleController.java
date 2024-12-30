@@ -75,17 +75,7 @@ public class UserRoleController {
                             responseCode = "403")
             })
     public ResponseEntity<UserRole> updateUserRole(@PathVariable long id, @RequestBody UserRoleDTO userRoleDTO) {
-        UserRole userRole = new UserRole();
-        userRole.setName(userRoleDTO.getName());
-        userRole.setDescription(userRoleDTO.getDescription());
-
-        // Map permission IDs to Permission entities
-        Set<Permission> permissions = userRoleDTO.getPermissionIds().stream()
-                .map(permissionService::searchPermission)
-                .collect(Collectors.toSet());
-        userRole.setPermissions(permissions);
-
-        return ResponseEntity.ok(userRoleService.updateUserRole(id, userRole));
+        return ResponseEntity.ok(userRoleService.updateUserRole(id, userRoleDTO));
     }
 
     @PostMapping

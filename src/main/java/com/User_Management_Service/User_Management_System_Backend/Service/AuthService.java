@@ -56,12 +56,12 @@ public class AuthService {
         try{
             usersRepository.save(newUser);
             log.info("User [{}] added", registrationRequest.getEmail());
-            return ResponseEntity.status(200).body("User Successfully added");
+            return ResponseEntity.status(200).body("User Successfully Added");
         }
 
         catch (Exception e) {
             log.error(e.getMessage());
-            return ResponseEntity.status(500).body("Can't add user");
+            return ResponseEntity.status(500).body("Can't Add User");
         }
     }
 
