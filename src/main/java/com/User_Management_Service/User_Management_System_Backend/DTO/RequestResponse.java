@@ -15,4 +15,5 @@ public class RequestResponse {
     private String refreshToken;
     private String expirationTime;
     private User userDetails;
+    private String role;
 }

@@ -78,6 +78,7 @@ public class AuthService {
 
             response.setToken(jwt);
             response.setRefreshToken(refreshToken);
+            response.setRole(user.getUserRole().getName());
             response.setExpirationTime("24Hrs");
             response.setMessage("Logged in Successfully");
 

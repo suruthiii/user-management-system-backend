@@ -63,8 +63,8 @@ public class UserService {
                 existingUser.setName(updateUser.getName());
             }
 
-            if (updateUser.getPhoneNumber() != null && !updateUser.getPhoneNumber().isEmpty()) {
-                existingUser.setPhoneNumber(updateUser.getPhoneNumber());
+            if (updateUser.getGender() != null && !updateUser.getGender().isEmpty()) {
+                existingUser.setGender(updateUser.getGender());
             }
 
             if (updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()) {

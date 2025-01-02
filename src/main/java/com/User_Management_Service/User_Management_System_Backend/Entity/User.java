@@ -19,26 +19,26 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(name = "email", nullable = false, unique = true, length = 150)
+    @Column(nullable = false, unique = true, length = 150)
     private String email;
 
-    @Column(name = "password", nullable = false, length = 255)
+    @Column(nullable = false, length = 255)
     private String password;
 
     @Column(name = "phone_number", nullable = false, unique = true, length = 15)
     private String phoneNumber;
 
-    @Column(name = "gender", nullable = false, length = 10)
+    @Column(nullable = false, length = 10)
     private String gender;
 
     @Column(name = "date_of_birth", nullable = false)
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
+    @Column(nullable = false)
     private UserStatus status;
 
     @ManyToOne

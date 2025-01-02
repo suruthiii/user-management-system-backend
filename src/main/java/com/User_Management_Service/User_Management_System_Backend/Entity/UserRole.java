@@ -15,12 +15,6 @@ import java.util.Set;
 @Data
 public class UserRole extends BaseEntity {
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
     @OneToMany(mappedBy = "userRole", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<User> users;
@@ -36,7 +30,7 @@ public class UserRole extends BaseEntity {
 
     @Override
     public String toString() {
-        return "UserRoles{id=" + getId() + ", name='" + name + "'}";
+        return "UserRoles{id=" + getId() + ", name='" + getName() + "'}";
     }
 }
 
