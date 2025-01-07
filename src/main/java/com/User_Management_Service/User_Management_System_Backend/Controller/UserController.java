@@ -8,6 +8,7 @@ import com.User_Management_Service.User_Management_System_Backend.Service.UserSe
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -89,7 +90,7 @@ public class UserController {
                     @ApiResponse(description = "Forbidden", responseCode = "403")
             }
     )
-    public ResponseEntity<String> createUser (@RequestBody UserDTO request) {
+    public ResponseEntity<String> createUser (@Valid @RequestBody UserDTO request) {
         return authService.register(request);
     }
 }

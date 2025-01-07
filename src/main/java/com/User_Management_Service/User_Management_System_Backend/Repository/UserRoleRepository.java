@@ -8,4 +8,7 @@ import java.util.List;
 public interface UserRoleRepository extends CoreRepository<UserRole, Long> {
     @Query("SELECT ur.name FROM UserRole ur JOIN ur.permissions p WHERE p.name = :permissionName")
     List<String> findUserRolesWithPermission(String permissionName);
+
+    @Query("SELECT p.name FROM UserRole ur JOIN ur.permissions p WHERE ur.id = :roleId")
+    List<String> findPermissionNamesByRoleId(Long roleId);
 }

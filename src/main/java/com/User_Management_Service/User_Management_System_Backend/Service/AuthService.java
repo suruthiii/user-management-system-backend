@@ -18,6 +18,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +83,9 @@ public class AuthService {
             response.setRole(user.getUserRole().getName());
             response.setExpirationTime("24Hrs");
             response.setMessage("Logged in Successfully");
+
+            List<String> permissionList = userRoleRepository.findPermissionNamesByRoleId(user.getUserRole().getId());
+            response.setPermissions(permissionList);
 
             if (user.getStatus() == UserStatus.PENDING){
                 user.setStatus(UserStatus.ACTIVE);
